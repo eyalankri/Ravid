@@ -1,0 +1,115 @@
+﻿
+@{
+    Layout = "";
+    ViewData["Title"] = "Login";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Ravid</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div style="text-align:center"><h2>התחברות למערכת</h2></div>
+        <div id="vapp">
+            <div class="login container">
+                <form v-on:submit.prevent="doLogin" class="card-panel ltr">
+                    <div class="form-group">
+                        <label for="email">כתובת אימייל:</label>
+                        <input type="email" class="form-control" id="email" placeholder="הכנס כתובת אימייל" v-model="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">סיסמה:</label>
+                        <input type="password" class="form-control" id="password" placeholder="הכנס סיסמה" v-model="password">
+                    </div>
+                    <p class="red-text center" v-if="feedback">{{ feedback }}</p>
+                    <button type="submit" class="btn btn-primary">התחבר</button>
+                </form>
+
+
+            </div>
+            @*<button type="submit" class="btn btn-primary" v-on:click="isTokenValid()">בדוק</button>*@
+        </div>
+      
+    </div>
+
+    <script>
+        var createTokenUrl = '@Url.Action("CreateToken", "Account")';
+        var isTokenValidUrl = '@Url.Action("IsTokenValid", "Account")';
+        var userLoginUrl = '@Url.Action("UserLogin", "Account")';
+        var userListUrl = '@Url.Action("Index", "User")';
+
+
+    </script>
+    <script src="~/vue/Account/Login.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+    $('#btnSave').click(function() {
+
+
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("CreateToken", "Account")',
+            contentType: 'application/json; charset=utf-8',
+
+            data: JSON.stringify({
+                "Email": "eyal.ank@gmail.com",
+                "Password": "5224287ea"
+            }),
+
+            success: function (response) {
+                if (response.success) {
+                    console.log(respons)
+                } else {
+                    alert("Error!");
+                }
+            },
+            error: function (response) {
+                alert("error!");  //
+            }
+        });
+    });
+</script>

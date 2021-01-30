@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Ravid.Dto.TrasportRequestDto>
+@using Microsoft.AspNetCore.Http;
+@using Ravid.Enums;
+@using System.Security.Claims;
+@inject IHttpContextAccessor httpContextAccessor
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>בקשות הובלה</h1>
+
+<p>
+    <a asp-action="Create">צור חדשה</a>
+</p>
+<div style="width:100%; overflow-x:scroll">
+
+    <table width="100%" class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Company)
+                </th>
+                <th class="mobile-only">
+                    @Html.DisplayNameFor(model => model.DateCreated)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ForDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumberOfPlates)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DeliveryFor)
+                </th>
+                <th style="min-width:150px">
+                    @Html.DisplayNameFor(model => model.Comment)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.TrasportRequestStatus)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Company)
+                    </td>
+                    <td class="mobile-only">
+                        @Html.DisplayFor(modelItem => item.DateCreated)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ForDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumberOfPlates)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DeliveryFor)
+                    </td>
+                    <td>
+                        <textarea class="form-control">@item.Comment</textarea>
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TrasportRequestStatus)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.TrasportRequestId">עריכה</a> <br />
+                        <a asp-action="Details" asp-route-id="@item.TrasportRequestId">פרטים</a><br />
+                        @if (httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role).Value == nameof(UserRoles.Administrator))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.TrasportRequestId">מחיקה</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

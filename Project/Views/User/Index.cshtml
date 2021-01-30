@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Ravid.Models.User>
+@using Microsoft.AspNetCore.Http;
+@using Ravid.Enums;
+@using System.Security.Claims;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role).Value == nameof(UserRoles.Administrator))
+{
+    <h1>לקוחות</h1><p><a asp-action="Create">צור חדש</a></p>
+}
+else
+{
+    <h1>הפרטים שלי</h1>
+    <br />
+}
+
+<div style="width:100%; overflow-x:scroll">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Company)
+                </th>
+                <th class="mobile-only">
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th class="mobile-only">
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th class="mobile-only">
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Phone1)
+                </th>
+                <th class="mobile-only">
+                    @Html.DisplayNameFor(model => model.Phone2)
+                </th>
+
+
+                <th class="mobile-only">
+                    @Html.DisplayNameFor(model => model.Comment)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Company)
+                    </td>
+                    <td class="mobile-only">
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td class="mobile-only">
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td class="mobile-only">
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone1)
+                    </td>
+                    <td class="mobile-only">
+                        @Html.DisplayFor(modelItem => item.Phone2)
+                    </td>
+
+                    <td class="mobile-only">
+                        @Html.DisplayFor(modelItem => item.Comment)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.UserId">עריכה</a><br />
+                        <a asp-action="Details" asp-route-id="@item.UserId">הצג</a><br />
+
+                        @if (httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role).Value == nameof(UserRoles.Administrator))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.UserId">מחק</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
