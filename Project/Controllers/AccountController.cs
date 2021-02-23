@@ -49,7 +49,7 @@ namespace Ravid.Controllers
         public IActionResult UserLogin([FromBody] LoginDto user)
         {
 
-            var getRoleAndUserId = GetRoleAndUserId(user); 
+            var getRoleAndUserId = GetRoleAndUserId(user);
             if (getRoleAndUserId == null)
             {
                 return BadRequest("User was not found.");
@@ -81,37 +81,26 @@ namespace Ravid.Controllers
         private RoleAndUserId GetRoleAndUserId(LoginDto login)
         {
             var password = Encryption.Sha256(login.Password);
-            try
+
+            var roleAndUserId = (
+                  from u in _db.Users
+                  join uir in _db.UserInRoles on u.UserId equals uir.UserId
+                  join r in _db.Roles on uir.RoleId equals r.RoleId
+                  where
+                         u.Password == password &&
+                         u.Email == login.Email
+                  select new RoleAndUserId
+                  {
+                      UserId = u.UserId,
+                      RoleName = r.RoleName,
+
+                  }).FirstOrDefault();
+
+            if (roleAndUserId != null)
             {
-                var roleAndUserId = (
-                      from u in _db.Users
-                      join uir in _db.UserInRoles on u.UserId equals uir.UserId
-                      join r in _db.Roles on uir.RoleId equals r.RoleId
-                      where
-                             u.Password == password &&
-                             u.Email == login.Email                     
-                      select new RoleAndUserId
-                      {
-                          UserId = u.UserId,
-                          RoleName = r.RoleName,
-                          
-                      }).FirstOrDefault();
-
-                if (roleAndUserId != null)
-                {
-                    return roleAndUserId;
-                }
-                return null;
-                
+                return roleAndUserId;
             }
-            catch (Exception ex)
-            {
-                var a = ex;
-                throw;
-            }
-
-
-
+            return null;             
 
         }
 
